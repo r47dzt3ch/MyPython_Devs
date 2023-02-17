@@ -2,7 +2,7 @@ import openai
 import os
 
 # Set up the OpenAI API client
-openai.api_key = "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"
+openai.api_key = "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"
 # Set up the model and prompt
 model_engine = "text-davinci-003"
 
@@ -23,6 +23,6 @@ while cond:
     print(response)
     print("\nAre you want to continue?\n(enter)-Yes\t\t(1)-No")
     key = input("enter: ")
-    os.system('clear')
+    os.system('cls')
     if str(key) =='1' or str(key)=='no':
         cond=False

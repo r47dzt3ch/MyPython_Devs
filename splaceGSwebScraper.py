@@ -33,12 +33,13 @@ button.click()
 driver.get("https://www.melissa.com/v2/lookups/personatorsearch/")
 
 # Get all values from the sheet
-values = worksheet.get_all_values()
+values = worksheet.get_all_values(row_offset=1)
 
 # Loop through the list of lists and get the values from the first column
 column_values = [row[2] for row in values]
 # Convert the list of hashes into a dataframe
 df = pd.DataFrame(column_values)
+
 print(df)
 # print(column_values)
 # driver.get("https://www.melissa.com/v2/lookups/personatorsearch/?phoneNumber={0}".format(column_values))
