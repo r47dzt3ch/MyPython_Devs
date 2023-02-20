@@ -33,9 +33,7 @@ sh2 = gc.open('zipcodes')
 worksheet2= sh2.worksheet('VIVO Solar')
 # Get all values from the sheet
 all_values = worksheet.get_all_values()
-list_areaSupportedZipcodes = worksheet2.get_all_values()
-# # Loop through the list of lists and get the values from the first column
-list_asptZipcodes = [row[0] for row in list_areaSupportedZipcodes]
+all_supportedZipcodes = worksheet2.get_all_values()
 # phoneNum_values = [row[2] for row in values]  # 2 is the phoneNumber column   
 # zipcode_values = [row[7] for row in values]  # 7 is the zipcode column  
 # df_list_asptZipcodes = pd.DataFrame(list_asptZipcodes)
@@ -96,35 +94,46 @@ def sendPhoneNum(phoneN):
             #open the melissa.com phone look up page
             driver.get("https://www.melissa.com/v2/lookups/personatorsearch/?phoneNumber={0}".format(row))
             time.sleep(2)
-
             # check if the table ID is present in the page
-            try:  # try and except block to catch the error if the table is not found and continue the loop
-                table = driver.find_element(By.ID,'tblPeopleList') #find element using id in table 
-                tbl_header = table.find_elements(By.TAG_NAME,"thead") # find the header of the table
-                tbl_header_cols = tbl_header[0].find_elements(By.TAG_NAME,"th") # find the columns of the table
-                tbl_rows = table.find_elements(By.TAG_NAME,"tr") #get all of the rows in the table
-                zipcode_index = tbl_header_cols.index("ZIP") #get the index of zipcode column
-                print(zipcode_index)
-                time.sleep(2)
-                # Get all rows from the table
-                for tbl_tr in tbl_rows:
-                    # Get all columns
-                    tbl_cols = tbl_tr.find_elements(By.TAG_NAME,"td") #note: index start from 0, 1 is col 2
-                    # Get the text from columns in for loop
-                    for col_text in tbl_cols:
-                        #condition to filter the appended data with zipcode column that supported in zipcode sheet
-                        #codition for two arrays in if statement in python
-                        try :
-                            if col_text[zipcode_index] == list_asptZipcodes[1:]:
-                                #append the data to tbl_data list
-                                tbl_data = col_text.append(col_text.text)
-                                print('Phone Number: {0} = {1}'.format(phoneN,tbl_data))
-                        except Exception as e:
-                            print("Error 103.1: with filtering zipcode: ",e)
-                            pass
-                    
+            try: 
+                try :
+                    zipcode_header=all_supportedZipcodes[0]
+                    zipcode_index = zipcode_header.index("zipcode")
+                    list_asptZipcodes = [row[zipcode_index] for row in all_supportedZipcodes[1:]]
+                    print("The length of zipcodes: ", len(list_asptZipcodes))
+                    # try and except block to catch the error if the table is not found and continue the loop
+                    table = driver.find_element(By.ID,'tblPeopleList') #find element using id in table 
+                    tbl_header = table.find_elements(By.TAG_NAME,"thead") # find the header of the table
+                    tbl_header_cols = tbl_header[0].find_elements(By.TAG_NAME,"tr") # find the columns of the table
+                    tbl_header_cols_th = tbl_header_cols[0].find_elements(By.TAG_NAME,"th") # find the columns of the table
+                    zipcode_index = tbl_header_cols_th.index("ZIP") #get the index of zipcode column
+
+                    tbl_rows = table.find_elements(By.TAG_NAME,"tr") #get all of the rows in the table
+                    print(zipcode_index)
+                    time.sleep(2)       
+                    try :
+                        # Get all rows from the table
+                        for tbl_tr in tbl_rows:
+                            # Get all columns
+                            tbl_cols = tbl_tr.find_elements(By.TAG_NAME,"td") #note: index start from 0, 1 is col 2
+                            # Get the text from columns in for loop
+                            for col_text in tbl_cols:
+                                #condition to filter the appended data with zipcode column that supported in zipcode sheet
+                                #codition for two arrays in if statement in python
+                                
+                                    if col_text[zipcode_index] == list_asptZipcodes[1:]:
+                                        #append the data to tbl_data list
+                                        tbl_data = col_text.append(col_text.text)
+                                        print('Phone Number: {0} = {1}'.format(phoneN,tbl_data))
+                    except Exception as e:
+                        print("Error 103.2: with filtering zipcode: ",e)
+                        pass                   
+                except Exception as e:
+                    print("Error 103.1: with finding Header: ",e)
+                    pass
             except:
                 print("No Results Found for {0}".format(row))
+
                 continue
        
             # if driver.find_element(By.XPATH,'//*[@id="tblPeopleList"]/tbody') is None:
