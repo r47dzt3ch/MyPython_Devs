@@ -27,9 +27,6 @@ driver=webdriver.Edge()
 def watchtheVideo(channel_url):
     driver.get(channel_url)
     time.sleep(2)
-
-
-
 #testing the function
 if __name__ == '__main__':
     channel_url = 'https://www.youtube.com/channel/UCSs5XcyhykU4oVv16iPmAJQ'
