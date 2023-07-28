@@ -95,6 +95,8 @@ def sendPhoneNum(phoneN):
             driver.get("https://www.melissa.com/v2/lookups/personatorsearch/?phoneNumber={0}".format(row))
             time.sleep(2)
             # check if the table ID is present in the page
+    #
+
             try: 
                 try :
                     zipcode_header=all_supportedZipcodes[0]
