@@ -8,7 +8,7 @@ import requests
 # execute in terminal"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --remote-debugging-port=9222 /prefetch:5 --flag-switches-begin --enable-features=msEdgeDevToolsWdpRemoteDebugging --flag-switches-end
 options = Options()
 # mobile user agent in edge browser
-options.add_argument("user-agent=Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Mobile Safari/537.36 Edg/86.0.622.69")
+# options.add_argument("user-agent=Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Mobile Safari/537.36 Edg/86.0.622.69")
 options.add_experimental_option("debuggerAddress", "localhost:9222")
 
 
