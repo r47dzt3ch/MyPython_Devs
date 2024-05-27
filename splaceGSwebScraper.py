@@ -1,6 +1,6 @@
 #/usr/bin/python3
 #r47dzt3ch
-from config import *
+# from config import *
 import sys
 import gspread
 from selenium import webdriver
@@ -23,7 +23,7 @@ driver = webdriver.Edge(options=options)
 # define the scope
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 # create the credentials object
-credentials = ServiceAccountCredentials.from_json_keyfile_name('creds.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('Credentials\creds.json', scope)
 # create the gspread client
 gc = gspread.authorize(credentials)
 sh1 = gc.open('splacegs')
@@ -49,8 +49,8 @@ def loginMelissa():
         #find the button and click it
         txtb_email = driver.find_element(By.ID, 'ctl00_ContentPlaceHolder1_Signin1_txtEmail') # 1st argument is the locator type, 2nd argument is the locator value
         txtb_pass = driver.find_element(By.ID, 'ctl00_ContentPlaceHolder1_Signin1_txtPassword') 
-        txtb_email.send_keys(melissa_email)
-        txtb_pass.send_keys(melissa_password)
+        txtb_email.send_keys('melissa_email')
+        txtb_pass.send_keys('melissa_password')
         button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "ctl00_ContentPlaceHolder1_Signin1_btnLogin")))
         button.click()
         time.sleep(4)

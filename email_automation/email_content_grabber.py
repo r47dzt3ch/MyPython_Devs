@@ -9,12 +9,13 @@ import base64
 import json
 import requests
 import openai
+import spacy
+nlp = spacy.load('en_core_web_sm')
 
 client_secret_path = os.path.join(os.getcwd(), 'Credentials\client_secret.json')
 scope = ['https://mail.google.com', 'https://www.googleapis.com/auth/gmail.modify', 'https://www.googleapis.com/auth/gmail.readonly']
 creds =  Credentials.from_authorized_user_file(client_secret_path, scope)
 service = build('gmail', 'v1', credentials=creds)
-
 
 def realtime_email_read_content(domain_filter):
     # Call the Gmail API to get a list of messages
@@ -53,7 +54,6 @@ def realtime_email_read_content(domain_filter):
                 # Check if the extracted domain matches the domain_filter
                 if domain == domain_filter:
                     print("Domain:", domain)
-
                     # Extract the sender (From) and subject of the email
                     for header in headers:
                         if header['name'].lower() == 'from':
@@ -80,6 +80,12 @@ def realtime_email_read_content(domain_filter):
                             msg_str = msg['snippet']
                         # Print the email body
                         print("Body:", msg_str)
+                        # Check if the email content is not spam if spam move  it to Spam folder 
+                        if check_spam(msg_str):
+                            print("Email identified as spam. Moving to SPAM folder.")
+                            label_id = 'SPAM'
+                            service.users().messages().modify(userId='me', id=message['id'], body={'addLabelIds': [label_id]}).execute()
+                            continue  # Skip further processing if email is spam
                         # reply to the email
                         reply_msg = message_assistant(msg_str)
                         print("Reply:", reply_msg)
@@ -96,22 +102,34 @@ def realtime_email_read_content(domain_filter):
     except HttpError as error:
         print('An error occurred: %s' % error)
 
+def preprocess_text(text):
+    # Tokenize text and remove punctuation and stop words
+    doc = nlp(text)
+    tokens = [token.lemma_.lower() for token in doc if not token.is_stop and not token.is_punct]
+    return " ".join(tokens)
 
-# def analyze_email_content(msg_str): #anaylyze the message using chatgpt model
-#     with open('Credentials\api_keys.json', 'r') as file:
-#         Credentials = json.load(file)
+def extract_features(text):
+    # Extract features using spaCy (for demonstration, just using word counts)
+    doc = nlp(text)
+    return len(doc)
 
-#     api_key = Credentials['huggingface_godel_apikey']
-#     url = "https://api-inference.huggingface.co/models/microsoft/GODEL-v1_1-base-seq2seq"
-#     payload = {"inputs": msg_str}
-#     headers = {"Authorization": f"Bearer {api_key}"}
-#     response = requests.post(url, headers=headers, json=payload)
-#     if response.status_code == 200:
-#         return response.json()
-#     else:
-#         return {"error": response.text}
-
+def check_spam(message):
+    # Preprocess the message text
+    preprocessed_message = preprocess_text(message)
+    
+    # Extract features from the preprocessed text
+    features = extract_features(preprocessed_message)
+    
+    # Here you would typically use a trained model to classify the message based on its features
+    # For demonstration, let's assume a simple rule-based classification
+    if features > 10:
+        return False  # Not spam
+    else:
+        return True   # Spam
 def message_assistant(msg_str):
+    
+
+
     url = "https://chatgpt-gpt4-ai-chatbot.p.rapidapi.com/ask"
     with open(r'Credentials/api_keys.json', 'r') as file:
         Credentials = json.load(file)
@@ -159,3 +177,4 @@ def send_email(sender_email, to_email, subject, body):
 
 if __name__ == "__main__":
     realtime_email_read_content('gmail.com')
+    
