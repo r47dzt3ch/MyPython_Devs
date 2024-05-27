@@ -11,7 +11,7 @@ from google.auth.transport.requests import Request
 import spacy
 
 # load the credentials from the json file
-client_secret_path = os.path.join(os.getcwd(), 'Credentials\client_secret.json')
+client_secret_path = os.path.join(os.getcwd(), 'Credentials\client_secretPyMailBot.json')
 scope = ['https://mail.google.com', 'https://www.googleapis.com/auth/gmail.modify', 'https://www.googleapis.com/auth/gmail.readonly']
 
 try:
@@ -23,32 +23,39 @@ except Exception as e:
 nlp = spacy.load('en_core_web_sm')
 
 def get_email_content():
-    try:
-        # Call the Gmail API to get a list of messages
-        results = service.users().messages().list(userId='me', labelIds=['INBOX']).execute()
-        print(len(results['messages']))
-        messages = results.get('messages', [])
-        for message in messages:
-            msg = service.users().messages().get(userId='me', id=message['id']).execute()
-            # extract the email address from the message
-            headers = msg['payload']['headers']
-            for header in headers:
-                print(header['name'])
-                if header['name'].lower() == 'from':
-                    f_email = header['value']
-                    body_data = msg['payload']['body'].get('data')
-                    if body_data:
-                        body = body_data('utf-8').decode('utf-8')
-                    else:
-                        # Handle the missing 'data' field
-                        body = None
-                    print(f_email, body)
-                    # Check if the email content is spam using the spacy library
-                    if not is_spam(body):
-                        yield (f_email, body)
+    while True:
+        try:
+            # Call the Gmail API to get a list of messages
+            results = service.users().messages().list(userId='me', labelIds=['INBOX']).execute()
+            print(len(results['messages']))
+            messages = results.get('messages', [])
+            if not messages:
+                print("No new messages. Waiting for new messages...")
+                time.sleep(10)  # wait for 10 seconds before checking again
+                continue
+            for message in messages:
+                msg = service.users().messages().get(userId='me', id=message['id']).execute()
+                # extract the email address from the message
+                headers = msg['payload']['headers']
+                for header in headers:
+                    print(header['name'])
+                    if header['name'].lower() == 'from':
+                        f_email = header['value']
+                        body_data = msg['payload']['body'].get('data')
+                        if body_data:
+                            body = body_data('utf-8').decode('utf-8')
+                        else:
+                            # Handle the missing 'data' field
+                            body = None
                         print(f_email, body)
-    except Exception as e:
-        print(f"Failed to get email content: {e}")
+                        # Check if the email content is spam using the spacy library
+                        if not is_spam(body):
+                            yield (f_email, body)
+                            print(f_email, body)
+        except Exception as e:
+            print(f"Failed to get email content: {e}")
+            break  # exit the loop if there's an error
+
 
 def is_spam(text):
     try:
@@ -99,6 +106,7 @@ def delete_email(domain):
 
 if __name__ == '__main__':
     try:
+        # delete_email("linkedin.com")
         get_email_content()
     except Exception as e:
         print(f"Failed to execute main function: {e}")
