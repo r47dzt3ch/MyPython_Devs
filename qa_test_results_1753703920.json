@@ -1,0 +1,92 @@
+{
+  "timestamp": "2025-07-28 19:58:40",
+  "url": "https://mawabhydroponics.netlify.app/",
+  "analysis": {
+    "requires_login": false,
+    "login_elements": {
+      "username_field": null,
+      "password_field": null,
+      "submit_button": null
+    },
+    "page_type": "content",
+    "main_modules": [
+      "Header",
+      "Hero Section",
+      "Main Content (likely below hero section, truncated in provided HTML)"
+    ],
+    "interactive_elements": [
+      {
+        "type": "link",
+        "href": "/",
+        "text": "Home"
+      },
+      {
+        "type": "link",
+        "href": "/products",
+        "text": "Products"
+      },
+      {
+        "type": "link",
+        "href": "/about",
+        "text": "About Us"
+      },
+      {
+        "type": "link",
+        "href": "/order",
+        "text": "Order Now"
+      },
+      {
+        "type": "link",
+        "href": "/login",
+        "text": "Admin Login"
+      },
+      {
+        "type": "button",
+        "aria_controls": "radix-\u00abRurdb\u00bb",
+        "description": "Mobile menu toggle"
+      }
+    ],
+    "forms": [],
+    "navigation": [
+      {
+        "href": "/",
+        "text": "Home"
+      },
+      {
+        "href": "/products",
+        "text": "Products"
+      },
+      {
+        "href": "/about",
+        "text": "About Us"
+      },
+      {
+        "href": "/order",
+        "text": "Order Now"
+      }
+    ],
+    "content_summary": "Homepage for Mawabhydroponics, a company selling sustainably grown hydroponic lettuce.  The page features a hero section with a tagline and brief description, and links to Home, Products, About Us, and Order Now pages.  An admin login link is also present."
+  },
+  "tests_run": [
+    {
+      "name": "Page Load Test",
+      "status": "PASSED",
+      "details": true
+    },
+    {
+      "name": "Navigation Test",
+      "status": "PASSED",
+      "details": true
+    },
+    {
+      "name": "Form Validation Test",
+      "status": "PASSED",
+      "details": true
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0
+  }
+}
