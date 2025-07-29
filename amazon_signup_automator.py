@@ -377,21 +377,21 @@ async def run_ai_driven_signup(playwright: Playwright, ws_endpoint: str):
 async def main():
     """Main function to orchestrate the automation process."""
     dolphin = DolphinAPI(DOLPHIN_API_TOKEN)
-    profile_id = None
+    profile_id = 638878967
 
     try:
         # 1. Authenticate with Local API
         if not dolphin.login_with_token():
             return
 
-        # 2. Create Dolphin Profile using Cloud API
-        profile_id = dolphin.create_profile()
-        if not profile_id:
-            return
+        # # 2. Create Dolphin Profile using Cloud API
+        # profile_id = dolphin.create_profile()
+        # if not profile_id:
+        #     return
         
         # Give local client time to sync
-        print("Waiting for local client to sync...")
-        time.sleep(10)
+        # print("Waiting for local client to sync...")
+        # time.sleep(10)
 
         # 3. Start Profile and get WebSocket endpoint
         ws_endpoint = dolphin.start_profile_automation(profile_id)
