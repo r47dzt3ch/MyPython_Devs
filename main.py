@@ -200,7 +200,7 @@ async def get_next_residential_proxy(username: str):
     # Find the proxy list file
     proxy_file = None
     for f in os.listdir(proxy_dir):
-        if f.endswith(".txt") and f != "last_used_port.txt" and f != "last_used_port.txt":
+        if f.endswith(".txt") and f != "last_used_port.txt" and f != "country.txt":
             proxy_file = os.path.join(proxy_dir, f)
             break
 
