@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+requests
+pydantic-settings
+google-generativeai
+beautifulsoup4
+lxml
+playwright
